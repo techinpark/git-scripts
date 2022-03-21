@@ -1,0 +1,18 @@
+BRANCH=$(git branch --list | awk '{ if ($1 == "*") print $2 }'d)
+REMOTE_ORIGIN=$(git remote get-url --push origin) # git@github.com-SSH_ID:ORGANIZATION/REPO_NAME.git
+_REPO_PATH=${REMOTE_ORIGIN%.git}
+REPO_PATH=${_REPO_PATH#*:}
+
+PR_URL="https://github.com/$REPO_PATH/pull/new/$BRANCH"
+# PR_URL="https://github.com/YOUR_ORGANIZATION/YOUR_REPO/pull/new/$BRANCH" # Use this when you doesn't use SSH but HTTPS
+echo -e "PR_URL: ${PR_URL}"
+
+PUSH_COMMAND="git push origin $BRANCH"
+echo -e "Executing '$PUSH_COMMAND'"
+$PUSH_COMMAND
+
+CREATE_PR_COMMAND="open $PR_URL"
+echo -e "Create a pull request for '$BRANCH'"
+$CREATE_PR_COMMAND
+
+exit 0
